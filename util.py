@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 import os
-from . import oauth2
+import oauth2
 from client import SpotifyException
 import webbrowser
 
