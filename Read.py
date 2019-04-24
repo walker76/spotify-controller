@@ -35,7 +35,7 @@ store = {}
 try:
     with open('store.pkl', 'rb') as f:
         store = pickle.load(f)
-except FileNotFoundError:
+except:
     print("No existing store")
 
 store['test_id'] = "spotify:user:andrew_walker2:playlist:6VXKlqxCX4ItIHWgFT9I6c"
