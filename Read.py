@@ -26,7 +26,7 @@ import MFRC522
 import signal
 import sys
 from client import Spotify
-import spotipy.util as util
+import util as util
 from auth_values import AuthValues
 from scope_builder import ScopeBuilder
 from sqlitedict import SqliteDict
