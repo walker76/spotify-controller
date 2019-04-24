@@ -29,9 +29,14 @@ from client import Spotify
 import util as util
 from auth_values import AuthValues
 from scope_builder import ScopeBuilder
-from sqlitedict import SqliteDict
+import pickle
 
-store = SqliteDict('./store.sqlite', autocommit=True)
+store = {}
+try:
+    with open('store.pkl', 'rb') as f:
+        store = pickle.load(f)
+except FileNotFoundError:
+    print("No existing store")
 
 store['test_id'] = "spotify:user:andrew_walker2:playlist:6VXKlqxCX4ItIHWgFT9I6c"
 
@@ -103,4 +108,5 @@ while continue_reading:
 			url = raw_input("Please enter a Spotify URL: ")
 			store[uid] = url
 	
-store.close()
+with open('store.pkl', 'wb') as f:
+    pickle.dump(store, f, pickle.HIGHEST_PROTOCOL)

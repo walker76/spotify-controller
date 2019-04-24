@@ -4,3 +4,4 @@ debug.log
 __pycache__
 auth_values.py
 store.sqlite
+store.pkl
