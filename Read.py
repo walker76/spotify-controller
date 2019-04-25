@@ -94,9 +94,15 @@ while continue_reading:
 		uid = "%s%s%s%s" % (uid[0], uid[1], uid[2], uid[3])
 
 		if store.__contains__(uid):
+			uri = store[uid]
+
+			if 'playlist' in uri:
+				sp.shuffle(True, device)
+			else:
+				sp.shuffle(False, device)
+
 			sp.volume(50, device)
-			sp.shuffle(False, device)
-			sp.start_playback(context_uri=store[uid], device_id=device)
+			sp.start_playback(context_uri=uri, device_id=device)
 		else:
 			url = raw_input("Please enter a Spotify URL: ")
 			store[uid] = url
