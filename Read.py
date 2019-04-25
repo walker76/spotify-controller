@@ -27,10 +27,12 @@ import signal
 import sys
 from client import Spotify
 import util as util
-from auth_values import AuthValues
 from scope_builder import ScopeBuilder
 import pickle
 import socket
+from auth_values import CLIENT_ID
+from auth_values import CLIENT_SECRET
+from auth_values import REDIRECT_URL
 
 store = {}
 
@@ -40,11 +42,7 @@ try:
 except:
     print("No existing store")
 
-store['test_id'] = "spotify:user:andrew_walker2:playlist:6VXKlqxCX4ItIHWgFT9I6c"
-
 scope = ScopeBuilder().library().spotify_connect().get_scopes()
-
-auth = AuthValues()
 
 if len(sys.argv) > 1:
 	username = sys.argv[1]
@@ -61,8 +59,7 @@ while True:
   	except:
 		pass
 
-token = util.prompt_for_user_token(username, scope, client_id=auth.CLIENT_ID, client_secret=auth.CLIENT_SECRET,
-                                   redirect_uri=auth.REDIRECT_URL)
+token = util.prompt_for_user_token(username, scope, client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL)
 
 device = None
 
