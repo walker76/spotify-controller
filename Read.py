@@ -33,33 +33,19 @@ import socket
 from auth_values import CLIENT_ID
 from auth_values import CLIENT_SECRET
 from auth_values import REDIRECT_URL
+from auth_values import USERNAME
 
 store = {}
 
 try:
-    with open('/home/pi/Projects/spotify-controller/store.pkl', 'rb') as f:
-        store = pickle.load(f)
+	with open('/home/pi/Projects/spotify-controller/store.pkl', 'rb') as f:
+		store = pickle.load(f)
 except:
-    print("No existing store")
+	print("No existing store")
 
 scope = ScopeBuilder().library().spotify_connect().get_scopes()
 
-if len(sys.argv) > 1:
-	username = sys.argv[1]
-else:
-	print("Usage: %s username" % (sys.argv[0],))
-	sys.exit()
-
-REMOTE_SERVER = "www.google.com"
-while True:  
-	try:
-    		host = socket.gethostbyname(REMOTE_SERVER)
-    		s = socket.create_connection((host, 80), 2)
-    		break
-  	except:
-		pass
-
-token = util.prompt_for_user_token(username, scope, client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL)
+token = util.prompt_for_user_token(USERNAME, scope, client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL)
 
 device = None
 
@@ -68,16 +54,17 @@ if token:
 	devices = sp.devices()
 	devices = devices['devices'][0]['id']
 else:
-    	print("Can't get token for", username)
+	print("Can't get token for", USERNAME)
+	sys.exit()
 
 continue_reading = True and devices != None
 
 # Capture SIGINT for cleanup when the script is aborted
 def end_read(signal,frame):
-    	global continue_reading
-    	print "Ctrl+C captured, ending read."
-    	continue_reading = False
-    	GPIO.cleanup()
+	global continue_reading
+	print "Ctrl+C captured, ending read."
+	continue_reading = False
+	GPIO.cleanup()
 
 # Hook the SIGINT
 signal.signal(signal.SIGINT, end_read)
@@ -92,29 +79,25 @@ print "Press Ctrl-C to stop."
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
 while continue_reading:
     
-    	# Scan for cards    
-    	(status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-
-    	# If a card is found
-    	# if status == MIFAREReader.MI_OK:
-        	# print "Card detected"
+	# Scan for cards
+	(status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
     
-    	# Get the UID of the card
-    	(status,uid) = MIFAREReader.MFRC522_Anticoll()
+	# Get the UID of the card
+	(status,uid) = MIFAREReader.MFRC522_Anticoll()
 
-    	# If we have the UID, continue
-    	if status == MIFAREReader.MI_OK:
+	# If we have the UID, continue
+	if status == MIFAREReader.MI_OK:
 
-        	# Print UID
-        	print "Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])
-    
-		uid = "%s%s%s%s" % (uid[0], uid[1], uid[2], uid[3])
+		# Print UID
+		print "Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])
 
-		if store.__contains__(uid):
-			sp.play_track(store[uid], device)
-		else:
-			url = raw_input("Please enter a Spotify URL: ")
-			store[uid] = url
+	uid = "%s%s%s%s" % (uid[0], uid[1], uid[2], uid[3])
+
+	if store.__contains__(uid):
+		sp.play_track(store[uid], device)
+	else:
+		url = raw_input("Please enter a Spotify URL: ")
+		store[uid] = url
 	
 with open('/home/pi/Projects/spotify-controller/store.pkl', 'wb') as f:
-    pickle.dump(store, f, pickle.HIGHEST_PROTOCOL)
+	pickle.dump(store, f, pickle.HIGHEST_PROTOCOL)
