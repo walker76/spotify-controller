@@ -35,7 +35,7 @@ from auth_values import REDIRECT_URL
 
 store = {}
 try:
-    with open('store.pkl', 'rb') as f:
+    with open('/home/pi/Projects/spotify-controller/store.pkl', 'rb') as f:
         store = pickle.load(f)
 except:
     print("No existing store")
@@ -108,5 +108,5 @@ while continue_reading:
 			url = raw_input("Please enter a Spotify URL: ")
 			store[uid] = url
 	
-with open('store.pkl', 'wb') as f:
+with open('/home/pi/Projects/spotify-controller/store.pkl', 'wb') as f:
     pickle.dump(store, f, pickle.HIGHEST_PROTOCOL)
