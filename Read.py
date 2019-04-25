@@ -30,10 +30,12 @@ import util as util
 from auth_values import AuthValues
 from scope_builder import ScopeBuilder
 import pickle
+import socket
 
 store = {}
+
 try:
-    with open('store.pkl', 'rb') as f:
+    with open('/home/pi/Projects/spotify-controller/store.pkl', 'rb') as f:
         store = pickle.load(f)
 except:
     print("No existing store")
@@ -49,6 +51,15 @@ if len(sys.argv) > 1:
 else:
 	print("Usage: %s username" % (sys.argv[0],))
 	sys.exit()
+
+REMOTE_SERVER = "www.google.com"
+while True:  
+	try:
+    		host = socket.gethostbyname(REMOTE_SERVER)
+    		s = socket.create_connection((host, 80), 2)
+    		break
+  	except:
+		pass
 
 token = util.prompt_for_user_token(username, scope, client_id=auth.CLIENT_ID, client_secret=auth.CLIENT_SECRET,
                                    redirect_uri=auth.REDIRECT_URL)
@@ -78,8 +89,8 @@ signal.signal(signal.SIGINT, end_read)
 MIFAREReader = MFRC522.MFRC522()
 
 # Welcome message
-# print "Welcome to the MFRC522 data read example"
-# print "Press Ctrl-C to stop."
+print "Welcome to the Spotify RFID reader"
+print "Press Ctrl-C to stop."
 
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
 while continue_reading:
@@ -108,5 +119,5 @@ while continue_reading:
 			url = raw_input("Please enter a Spotify URL: ")
 			store[uid] = url
 	
-with open('store.pkl', 'wb') as f:
+with open('/home/pi/Projects/spotify-controller/store.pkl', 'wb') as f:
     pickle.dump(store, f, pickle.HIGHEST_PROTOCOL)
