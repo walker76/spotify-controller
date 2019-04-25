@@ -91,13 +91,13 @@ while continue_reading:
 		# Print UID
 		print "Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3])
 
-	uid = "%s%s%s%s" % (uid[0], uid[1], uid[2], uid[3])
+		uid = "%s%s%s%s" % (uid[0], uid[1], uid[2], uid[3])
 
-	if store.__contains__(uid):
-		sp.play_track(store[uid], device)
-	else:
-		url = raw_input("Please enter a Spotify URL: ")
-		store[uid] = url
+		if store.__contains__(uid):
+			sp.play_track(store[uid], device)
+		else:
+			url = raw_input("Please enter a Spotify URL: ")
+			store[uid] = url
 	
 with open('/home/pi/Projects/spotify-controller/store.pkl', 'wb') as f:
 	pickle.dump(store, f, pickle.HIGHEST_PROTOCOL)
