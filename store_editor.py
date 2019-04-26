@@ -41,7 +41,7 @@ while not command == "q":
 
         url_id = tokens[1]
 
-        store = {k: v for k, v in store.items() if k != int(url_id)}
+        store = {k: v for k, v in store.items() if k != url_id}
 
     elif command == "p":
         for key in store:
