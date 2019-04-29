@@ -5,3 +5,4 @@ __pycache__
 auth_values.py
 store.sqlite
 store.pkl
+*.pyc
